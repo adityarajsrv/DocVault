@@ -2,6 +2,8 @@ import { useState } from "react";
 import logo from "/logo.png";
 import { FiFileText, FiSearch, FiClock } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -13,6 +15,11 @@ const Login = () => {
     agreeToTerms: false,
   });
 
+  const { login, register } = useAuth();
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -21,12 +28,23 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isLogin) {
-      console.log("Login Data:", formData);
-    } else {
-      console.log("Signup Data:", formData);
+    setError("");
+    setLoading(true);
+    try {
+      if (isLogin) {
+        await login(formData.email, formData.password);
+      } else {
+        await register(formData.fullName, formData.email, formData.password);
+      }
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 700);
+    } catch (err) {
+      setError(err.response?.data?.message || "Authentication failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -117,11 +135,25 @@ const Login = () => {
                   </a>
                 </div>
               )}
+              {error && (
+                <p className="text-sm text-red-600 bg-red-50 p-2 rounded">
+                  {error}
+                </p>
+              )}
               <button
                 type="submit"
-                className="cursor-pointer w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition"
+                disabled={loading}
+                className={`cursor-pointer w-full py-2 rounded-lg font-medium transition
+    ${loading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"}
+    text-white`}
               >
-                {isLogin ? "Sign In" : "Create Account"}
+                {loading
+                  ? isLogin
+                    ? "Signing in..."
+                    : "Creating account..."
+                  : isLogin
+                  ? "Sign In"
+                  : "Create Account"}
               </button>
             </form>
             <div className="flex items-center my-6">
