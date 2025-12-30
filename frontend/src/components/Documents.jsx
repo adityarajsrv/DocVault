@@ -17,6 +17,7 @@ import {
 import { useState } from "react";
 import FilterDropdown from "./FilterDropdown";
 import { LuFolder } from "react-icons/lu";
+import { useMemo } from "react";
 
 const documents = [
   {
@@ -104,6 +105,27 @@ const iconMap = {
 
 const Documents = () => {
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+
+  const clearFilters = () => {
+    setSelectedTypes([]);
+    setSelectedTags([]);
+  };
+
+  const filteredDocuments = useMemo(() => {
+    return documents.filter((doc) => {
+      const typeMatch =
+        selectedTypes.length === 0 ||
+        selectedTypes.includes(doc.type);
+
+      const tagMatch =
+        selectedTags.length === 0 ||
+        selectedTags.some((tag) => doc.tags.includes(tag));
+
+      return typeMatch && tagMatch;
+    });
+  }, [selectedTypes, selectedTags]);
 
   return (
     <div className="px-4">
@@ -112,74 +134,85 @@ const Documents = () => {
         Manage and organize your personal documents
       </p>
       <div className="flex justify-between items-center mb-4">
-        <p className="text-lg font-semibold">{documents.length} Documents</p>
+        <p className="text-lg font-semibold">
+          {filteredDocuments.length} Documents
+        </p>
         <button
           onClick={() => setShowFilters((prev) => !prev)}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm hover:bg-gray-100 transition"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm hover:bg-gray-100 transition cursor-pointer"
         >
           <RiSoundModuleLine className="rotate-90" />
           Filters
         </button>
       </div>
-      {showFilters && <FilterDropdown />}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {documents.map((doc, idx) => {
-          const icon = iconMap[doc.type];
-          return (
-            <div
-              key={idx}
-              className="group relative bg-white border border-gray-200 rounded-xl p-4 transition hover:shadow-md"
-            >
-              <button className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition">
-                <FiStar className="w-5 h-5 text-gray-400 hover:text-yellow-400 cursor-pointer" />
-              </button>
+      {showFilters && (
+        <FilterDropdown
+          selectedTypes={selectedTypes}
+          setSelectedTypes={setSelectedTypes}
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
+          onClear={clearFilters}
+        />
+      )}
+      {filteredDocuments.length === 0 ? (
+        <div className="text-center py-20 text-gray-400">
+          No documents match the selected filters
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {filteredDocuments.map((doc, idx) => {
+            const icon = iconMap[doc.type];
+            return (
               <div
-                className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${icon.bg}`}
+                key={idx}
+                className="group relative bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition"
               >
-                <span className={`text-xl ${icon.color}`}>
-                  {icon.icon}
-                </span>
-              </div>
-              <h3
-                title={doc.name}
-                className="text-sm font-semibold text-gray-800 mb-2 line-clamp-2"
-              >
-                {doc.name}
-              </h3>
-              <div className="flex flex-wrap gap-2 mb-3">
-                {doc.tags.map((tag, i) => (
-                  <span
-                    key={i}
-                    className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium"
-                  >
-                    {tag}
+                <button className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition cursor-pointer">
+                  <FiStar className="w-5 h-5 text-gray-400 hover:text-yellow-400" />
+                </button>
+                <div
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${icon.bg}`}
+                >
+                  <span className={`text-xl ${icon.color}`}>
+                    {icon.icon}
                   </span>
-                ))}
-              </div>
-              <p className="text-xs text-gray-500">{doc.time}</p>
-              <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition">
-                <div className="flex justify-between items-center bg-white backdrop-blur-sm rounded-lg px-3 py-2 shadow-sm">
-                  <ActionIcon icon={<FiEye />} />
-                  <ActionIcon icon={<FiEdit2 />} />
-                  <ActionIcon icon={<FiShare2 />} />
-                  <ActionIcon icon={<FiDownload />} />
-                  <ActionIcon icon={<FiClock />} />
+                </div>
+                <h3 className="text-sm font-semibold mb-2 line-clamp-2">
+                  {doc.name}
+                </h3>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {doc.tags.map((tag, i) => (
+                    <span
+                      key={i}
+                      className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500">{doc.time}</p>
+                <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition">
+                  <div className="flex justify-between bg-white rounded-lg px-3 py-2 shadow-sm">
+                    <ActionIcon icon={<FiEye />} />
+                    <ActionIcon icon={<FiEdit2 />} />
+                    <ActionIcon icon={<FiShare2 />} />
+                    <ActionIcon icon={<FiDownload />} />
+                    <ActionIcon icon={<FiClock />} />
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
 
-const ActionIcon = ({ icon }) => {
-  return (
-    <button className="cursor-pointer p-2 rounded-md bg-gray-100 hover:bg-gray-200 transition text-gray-600">
-      {icon}
-    </button>
-  );
-};
+const ActionIcon = ({ icon }) => (
+  <button className="p-2 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-600 cursor-pointer">
+    {icon}
+  </button>
+);
 
 export default Documents;
