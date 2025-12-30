@@ -23,7 +23,7 @@ const Sidebar = () => {
         <h1 className="text-2xl font-semibold text-gray-800">DocVault</h1>
       </div>
       <div className="flex flex-col flex-1 px-5 pt-6 space-y-3">
-        <button className="flex items-center justify-center gap-2 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        <button className="cursor-pointer flex items-center justify-center gap-2 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
           <HiOutlineUpload className="w-6 h-6 " />
           <span className="text-base font-semibold">Upload</span>
         </button>
@@ -59,7 +59,7 @@ const Sidebar = () => {
 
 const SidebarItem = ({ icon, label }) => {
   return (
-    <button className="w-full flex items-center gap-4 px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">
+    <button className="cursor-pointer w-full flex items-center gap-4 px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">
       <span className="w-6 h-6 text-[22px]">{icon}</span>
       <span className="text-base font-medium">{label}</span>
     </button>
