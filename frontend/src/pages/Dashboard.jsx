@@ -1,19 +1,20 @@
-import { useAuth } from "../context/AuthContext";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
-
   return (
-    <div className="h-screen flex flex-col items-center justify-center gap-4">
-      <h1 className="text-2xl font-semibold">
-        Welcome, {user?.fullName}
-      </h1>
-      <button
-        onClick={logout}
-        className="bg-red-500 text-white px-4 py-2 rounded"
-      >
-        Logout
-      </button>
+    <div className="flex h-screen overflow-hidden bg-gray-50">
+      <div className="w-64 h-full">
+        <Sidebar />
+      </div>
+      <div className="flex flex-col flex-1">
+        <Navbar />
+        <div className="flex-1 overflow-y-auto p-6">
+          <h1 className="text-2xl font-semibold text-gray-800">
+            Dashboard Content
+          </h1>
+        </div>
+      </div>
     </div>
   );
 };
