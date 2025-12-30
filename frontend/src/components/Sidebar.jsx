@@ -7,7 +7,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { GrStorage } from "react-icons/gr";
 import { IoSettingsOutline } from "react-icons/io5";
 
-const Sidebar = () => {
+const Sidebar = ({ activeSection, setActiveSection }) => {
   const usedStorage = 2.6;
   const totalStorage = 10;
   const usagePercent = (usedStorage / totalStorage) * 100;
@@ -28,15 +28,45 @@ const Sidebar = () => {
           <span className="text-base font-semibold">Upload</span>
         </button>
         <div className="space-y-1">
-          <SidebarItem icon={<CgFileDocument />} label="My Documents" />
-          <SidebarItem icon={<FaRegStar />} label="Starred" />
-          <SidebarItem icon={<FaRegFolderOpen />} label="Recent" />
+          <SidebarItem
+            icon={<CgFileDocument />}
+            label="My Documents"
+            isActive={activeSection === "documents"}
+            onClick={() => setActiveSection("documents")}
+          />
+          <SidebarItem
+            icon={<FaRegStar />}
+            label="Starred"
+            isActive={activeSection === "starred"}
+            onClick={() => setActiveSection("starred")}
+          />
+          <SidebarItem
+            icon={<FaRegFolderOpen />}
+            label="Recent"
+            isActive={activeSection === "recent"}
+            onClick={() => setActiveSection("recent")}
+          />
         </div>
         <hr className="border-gray-200" />
         <div className="space-y-2">
-          <SidebarItem icon={<FaRegTrashAlt />} label="Trash" />
-          <SidebarItem icon={<GrStorage />} label="Storage" />
-          <SidebarItem icon={<IoSettingsOutline />} label="Settings" />
+          <SidebarItem
+            icon={<FaRegTrashAlt />}
+            label="Trash"
+            isActive={activeSection === "trash"}
+            onClick={() => setActiveSection("trash")}
+          />
+          <SidebarItem
+            icon={<GrStorage />}
+            label="Storage"
+            isActive={activeSection === "storage"}
+            onClick={() => setActiveSection("storage")}
+          />
+          <SidebarItem
+            icon={<IoSettingsOutline />}
+            label="Settings"
+            isActive={activeSection === "settings"}
+            onClick={() => setActiveSection("settings")}
+          />
         </div>
       </div>
       <div className="px-5 py-4 border-t border-gray-300">
@@ -57,9 +87,17 @@ const Sidebar = () => {
   );
 };
 
-const SidebarItem = ({ icon, label }) => {
+const SidebarItem = ({ icon, label, isActive, onClick }) => {
   return (
-    <button className="cursor-pointer w-full flex items-center gap-4 px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">
+    <button
+      onClick={onClick}
+      className={`cursor-pointer w-full flex items-center gap-4 px-4 py-3 rounded-lg transition
+        ${
+          isActive
+            ? "bg-blue-100 text-blue-600"
+            : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+        }`}
+    >
       <span className="w-6 h-6 text-[22px]">{icon}</span>
       <span className="text-base font-medium">{label}</span>
     </button>
