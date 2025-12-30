@@ -20,13 +20,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: 8,
-      select: false, 
+      select: false,
     },
   },
   { timestamps: true }
 );
-
-userSchema.index({ email: 1 }, { unique: true });
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
