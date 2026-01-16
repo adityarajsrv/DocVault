@@ -6,9 +6,9 @@ import { BsFileEarmarkSpreadsheet } from "react-icons/bs";
 const Storage = () => {
   const totalStorage = 10;
   const usage = {
-    documents: 3.2,
-    images: 1.8,
-    spreadsheets: 0.9,
+    documents: 1.2,
+    images: 1.2,
+    spreadsheets: 0.2,
   };
 
   const usedStorage = usage.documents + usage.images + usage.spreadsheets;

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import logo from "/logo.png";
 import { FiFileText, FiSearch, FiClock } from "react-icons/fi";
-import { FcGoogle } from "react-icons/fc";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -156,19 +155,6 @@ const Login = () => {
                   : "Create Account"}
               </button>
             </form>
-            <div className="flex items-center my-6">
-              <div className="grow border-t" />
-              <span className="mx-4 text-gray-400 text-sm">
-                or continue with
-              </span>
-              <div className="grow border-t" />
-            </div>
-            <div className="flex gap-4">
-              <button className="cursor-pointer flex-1 flex items-center justify-center gap-2 border py-2 rounded-lg hover:bg-gray-50 transition">
-                <FcGoogle className="w-5 h-5" />
-                <span className="text-sm font-medium">Google</span>
-              </button>
-            </div>
             <p className="text-sm text-gray-600 mt-6">
               {isLogin
                 ? "Don't have an account? "

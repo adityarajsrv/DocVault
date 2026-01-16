@@ -7,7 +7,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { GrStorage } from "react-icons/gr";
 import { IoSettingsOutline } from "react-icons/io5";
 
-const Sidebar = ({ activeSection, setActiveSection }) => {
+const Sidebar = ({ activeSection, setActiveSection, onUpload }) => {
   const usedStorage = 2.6;
   const totalStorage = 10;
   const usagePercent = (usedStorage / totalStorage) * 100;
@@ -23,7 +23,10 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
         <h1 className="text-2xl font-semibold text-gray-800">DocVault</h1>
       </div>
       <div className="flex flex-col flex-1 px-5 pt-6 space-y-3">
-        <button className="cursor-pointer flex items-center justify-center gap-2 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        <button
+          onClick={onUpload}
+          className="cursor-pointer flex items-center justify-center gap-2 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+        >
           <HiOutlineUpload className="w-6 h-6 " />
           <span className="text-base font-semibold">Upload</span>
         </button>
